@@ -1,0 +1,84 @@
+[gd_scene load_steps=7 format=3 uid="uid://cf1kr33ywsegd"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_k6k8m"]
+[ext_resource type="Texture2D" uid="uid://be5vad7d5wo3t" path="res://クロスヘア.png" id="3_0tgop"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nre72"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_4fbaa"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_fujan"]
+
+[sub_resource type="GDScript" id="GDScript_56ygh"]
+script/source = "extends RayCast3D
+
+@onready var label = $Label
+@onready var ray = $\".\"
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	add_exception(owner)  #プレイヤ―自体が検出されない
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _physics_process(_delta):
+	label.text = \"\"
+	if ray.is_colliding():
+		print(\"aaaaa\")
+		label.text = \"Hmmm... that is something...\"
+"
+
+[node name="player" type="CharacterBody3D"]
+script = ExtResource("1_k6k8m")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_nre72")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.216506, 0, 0.25, 0, 0.25, 0, -0.125, 0, 0.433013, -0.417172, 1.20222, -0.455096)
+visible = false
+mesh = SubResource("SphereMesh_4fbaa")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.216506, 0, -0.25, 0, 0.25, 0, 0.125, 0, 0.433013, 0.427511, 1.19657, -0.464365)
+visible = false
+mesh = SubResource("SphereMesh_fujan")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -47.0
+offset_top = -47.0
+offset_right = 47.0
+offset_bottom = 47.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+texture = ExtResource("3_0tgop")
+
+[node name="head" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="RayCast3D" type="RayCast3D" parent="head"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.49912, 0)
+target_position = Vector3(0, -3, 0)
+script = SubResource("GDScript_56ygh")
+
+[node name="Label" type="Label" parent="head/RayCast3D"]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -24.5
+offset_bottom = 24.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+text = "Message
+[Key]"
+horizontal_alignment = 1
